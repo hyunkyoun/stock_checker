@@ -29,6 +29,6 @@ async def stock_checker():
 
     in_stock = target.check_stock()
     if in_stock:
-        await channel.send(f"🚀 The product is IN STOCK! Buy now: {TARGET_PRODUCT_URL}")
+        await channel.send(f"@everyone 🚀 The product is IN STOCK! Buy now: {TARGET_PRODUCT_URL}")
 
 bot.run(settings.DISCORD_API_SECRET, root_logger=True)
