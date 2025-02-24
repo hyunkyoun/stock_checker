@@ -11,8 +11,8 @@ TARGET_PRODUCT_URL = "https://www.target.com/p/pokemon-scarlet-violet-s3-5-boost
 TARGET_PRODUCT_URL_TEST_STOCK = "https://www.target.com/p/pok-233-mon-trading-card-game-zapdos-ex-deluxe-battle-deck/-/A-91351689#lnk=sametab"
 
 # Set up Selenium options
-# options = Options()
-# options.add_argument("--headless")  # Run browser in the background
+options = Options()
+options.add_argument("--headless")  # Run browser in the background
 # options.add_argument("--disable-gpu")
 # options.add_argument("--window-size=1920,1080")
 
@@ -22,16 +22,17 @@ driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 
 
 def check_stock():
-    driver.get(TARGET_PRODUCT_URL_TEST_STOCK)
-    time.sleep(5)  # Allow time for JavaScript to load
+    driver.get(TARGET_PRODUCT_URL)
+    time.sleep(1)  # Allow time for JavaScript to load
 
     try:
         # Check if the "Add to Cart" button exists and is enabled
-        add_to_cart_button = driver.find_element(By.XPATH, "//button[@id='addToCartButtonOrTextIdFor91351689']")
+        add_to_cart_button = driver.find_element(By.XPATH, "//button[@id='addToCartButtonOrTextIdFor88897904']")
         
         if add_to_cart_button.is_enabled():
+            print("🚀 Product is IN STOCK! Clicking add to cart!")
             add_to_cart_button.click()
-            time.sleep(5)
+            time.sleep(1)
             print("🚀 Product is IN STOCK!")
             return True
     except:
