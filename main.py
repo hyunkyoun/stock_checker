@@ -32,7 +32,7 @@ async def stock_checker():
         return
 
     for url in TARGET_URLS:
-        in_stock = target.check_stock()
+        in_stock = target.check_stock(url)
         if in_stock:
             await channel.send(f"@everyone 🚀 The product is IN STOCK! Buy now: {url}")
 
