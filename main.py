@@ -3,7 +3,11 @@ from discord.ext import commands, tasks
 import settings
 import logging
 import target 
-from target import TARGET_PRODUCT_URL
+
+TARGET_URLS = [
+    "https://www.target.com/p/pokemon-scarlet-violet-s3-5-booster-bundle-box/-/A-88897904#lnk=sametab",
+    "https://www.target.com/p/pok-233-mon-trading-card-game-zapdos-ex-deluxe-battle-deck/-/A-91351689#lnk=sametab",
+]
 
 # Configure logging
 logging.config.dictConfig(settings.LOGGING_CONFIG)
@@ -27,8 +31,9 @@ async def stock_checker():
         print("⚠️ Channel not found. Check your channel ID.")
         return
 
-    in_stock = target.check_stock()
-    if in_stock:
-        await channel.send(f"@everyone 🚀 The product is IN STOCK! Buy now: {TARGET_PRODUCT_URL}")
+    for url in TARGET_URLS:
+        in_stock = target.check_stock()
+        if in_stock:
+            await channel.send(f"@everyone 🚀 The product is IN STOCK! Buy now: {url}")
 
 bot.run(settings.DISCORD_API_SECRET, root_logger=True)

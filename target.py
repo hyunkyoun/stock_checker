@@ -51,11 +51,13 @@ def check_stock(url):
         try:
             addtocart_button = driver.find_element(By.XPATH, f"//button[@id='addToCartButtonOrTextIdFor{product_sku}']")
             if addtocart_button.is_enabled():
-                print("🚀 Product is IN STOCK! Adding to cart...")
-                addtocart_button.click()
-                time.sleep(1)
+                # print("🚀 Product is IN STOCK! Adding to cart...")
+                # addtocart_button.click()
+                # time.sleep(1)
+                return True
             else:
-                print("❌ Product is OUT OF STOCK. Retrying in 5 seconds...")
+                # print("❌ Product is OUT OF STOCK. Retrying in 5 seconds...")
+                return False
         except Exception as e:
             print("⚠️ Stock status unknown. Retrying in 5 seconds...")
 
@@ -63,11 +65,10 @@ def check_stock(url):
         driver.quit()
         time.sleep(RETRY_TIMING)
 
-def main():
-    while True:
-        for url in TARGET_URLS:
-            check_stock(url)
-        print("Retrying all URLs in 5 seconds...\n")
+def check_stock_main():
+    for url in TARGET_URLS:
+        check_stock(url)
+    print("Retrying all URLs in 5 seconds...\n")
 
 if __name__ == "__main__":
-    main()
+    check_stock_main()
