@@ -27,7 +27,7 @@ def send_embed(url, name, sku):
     if response.status_code == 200:
         print("Message sent successfully!")
     else:
-        print("Failed to send message. Status code:", response.status_code)
+        print("Failed to send message. Status code: ", response.status_code)
 
 def run_bot():
     while True:

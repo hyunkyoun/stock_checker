@@ -24,15 +24,13 @@ RETRY_TIMING = 5
 
 def create_driver():
     options = Options()
-    # options.add_argument("--headless")  # Run browser in the background
+    options.add_argument("headless")  # Run browser in the background
     
     user_agent = ua.random
     options.add_argument(f"user-agent={user_agent}")
 
     driver = webdriver.Chrome(service=Service(ChromeDriverManager(driver_version="133.0.6943.127").install()), options=options)
-    print("Chrome version:", driver.capabilities['browserVersion'])
-    print("Chrome path:", driver.capabilities['chrome']['chromedriverVersion'])
-    print("User Agent:", user_agent)
+    print("\nUser Agent:", user_agent)
     return driver
 
 def check_stock(url):
@@ -51,15 +49,15 @@ def check_stock(url):
         try:
             addtocart_button = driver.find_element(By.XPATH, f"//button[@id='addToCartButtonOrTextIdFor{product_sku}']")
             if addtocart_button.is_enabled():
-                # print("🚀 Product is IN STOCK! Adding to cart...")
+                print("in stock")
                 # addtocart_button.click()
                 # time.sleep(1)
                 return True
             else:
-                # print("❌ Product is OUT OF STOCK. Retrying in 5 seconds...")
+                print("out of stock")
                 return False
         except Exception as e:
-            print("⚠️ Stock status unknown. Retrying in 5 seconds...")
+            print("unknown stock")
 
     finally:
         driver.quit()
