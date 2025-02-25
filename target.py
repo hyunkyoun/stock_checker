@@ -63,7 +63,6 @@ def check_stock(url):
 
     finally:
         driver.quit()
-        time.sleep(RETRY_TIMING)
 
 def check_stock_main():
     for url in TARGET_URLS:
