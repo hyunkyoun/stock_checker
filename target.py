@@ -9,6 +9,8 @@ from fake_useragent import UserAgent
 import time
 import re
 
+import undetected_chromedriver as uc
+
 ua = UserAgent()
 
 def extract_product_id(url: str) -> str:
@@ -22,15 +24,25 @@ TARGET_URLS = [
 # in seconds
 RETRY_TIMING = 5
 
-def create_driver():
-    options = Options()
-    options.add_argument("headless")  # Run browser in the background
+# def create_driver():
+#     options = Options()
+#     options.add_argument("headless")  # Run browser in the background
     
+#     user_agent = ua.random
+#     options.add_argument(f"user-agent={user_agent}")
+
+#     driver = webdriver.Chrome(service=Service(ChromeDriverManager(driver_version="133.0.6943.127").install()), options=options)
+#     print("\nUser Agent:", user_agent)
+#     return driver
+
+def create_driver():
+    options = uc.ChromeOptions()
     user_agent = ua.random
     options.add_argument(f"user-agent={user_agent}")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-blink-features=AutomationControlled")
 
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager(driver_version="133.0.6943.127").install()), options=options)
-    print("\nUser Agent:", user_agent)
+    driver = uc.Chrome(options=options)
     return driver
 
 def check_stock(url):
