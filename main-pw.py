@@ -38,8 +38,8 @@ async def stock_checker():
             # Check stock
             in_stock = await target.check_stock(url, browser)
 
-            # Measure MB usage
-            page_size_mb = target.fetch_with_proxy(None, url)  # No proxy for now
+            # Measure MB usage using async function
+            page_size_mb = await target.fetch_with_proxy(None, url)
             print(f"Data usage for {url}: {page_size_mb:.2f} MB")
 
             if in_stock:
