@@ -6,7 +6,7 @@ import target
 import asyncio
 
 TARGET_URLS = [
-    "https://www.target.com/p/pok-233-mon-trading-card-game-zapdos-ex-deluxe-battle-deck/-/A-91351689#lnk=sametab",
+    "https://www.target.com/p/starburst-easter-original-jellybeans-14oz/-/A-53951890#lnk=sametab",
 ]
 
 # Configure logging
