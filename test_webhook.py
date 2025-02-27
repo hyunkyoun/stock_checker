@@ -1,7 +1,7 @@
 from discord_webhook import DiscordWebhook, DiscordEmbed
 from datetime import datetime
 import time
-import target
+import targets
 
 TARGET_URLS = [
     "https://www.target.com/p/pokemon-scarlet-violet-s3-5-booster-bundle-box/-/A-88897904#lnk=sametab",
@@ -32,9 +32,9 @@ def send_embed(url, name, sku):
 def run_bot():
     while True:
         for i in range(len(TARGET_URLS)):
-            in_stock = target.check_stock(TARGET_URLS[i])
+            in_stock = targets.check_stock(TARGET_URLS[i])
             if in_stock:
-                sku = target.extract_product_id(TARGET_URLS[i])
+                sku = targets.extract_product_id(TARGET_URLS[i])
                 send_embed(TARGET_URLS[i], TARGET_NAMES[i], sku)
             time.sleep(5)
 

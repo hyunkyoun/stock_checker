@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands, tasks
 import settings
 import logging
-import target 
+import targets
 
 # TARGET_URLS = [
 #     "https://www.target.com/p/pokemon-scarlet-violet-s3-5-booster-bundle-box/-/A-88897904#lnk=sametab",
@@ -36,9 +36,9 @@ async def stock_checker():
         return
 
     for url in TARGET_URLS:
-        in_stock = target.check_stock(url)
+        in_stock = targets.check_stock(url)
         if in_stock:
-            sku = target.extract_product_id(url)
+            sku = targets.extract_product_id(url)
             await channel.send(f"@everyone 🚀 The product is IN STOCK! Buy now: {url}")
 
 bot.run(settings.DISCORD_API_SECRET, root_logger=True)
