@@ -26,7 +26,7 @@ def send_embed(url, name, sku):
 
     embed = DiscordEmbed(title="Target Stock Notification", description=f"[{name}]({url})", color=0x00FF00)
     embed.add_embed_field(name="SKU", value=f"{sku}")
-    embed.set_footer(text=f"{datetime.now().strftime("%H:%M:%S")} EST")
+    # embed.set_footer(text={datetime.now().strftime("%H:%M:%S")})
 
     webhook.add_embed(embed)
     response = webhook.execute()
@@ -36,14 +36,23 @@ def send_embed(url, name, sku):
     else:
         print("Failed to send message. Status code: ", response.status_code)
 
+async def check_all_targets():
+    tasks = []
+    for i in range(len(TARGET_URLS)):
+        tasks.append(check_and_notify(TARGET_URLS[i], TARGET_NAMES[i]))
+    
+    await asyncio.gather(*tasks)
+
+async def check_and_notify(url, name):
+    in_stock = await target.check_stock(url)
+    if in_stock:
+        sku = target.extract_product_id(url)
+        send_embed(url, name, sku)
+
 def run_bot():
     while True:
-        for i in range(len(TARGET_URLS)):
-            in_stock = asyncio.run(target.check_stock(TARGET_URLS[i]))
-            if in_stock:
-                sku = target.extract_product_id(TARGET_URLS[i])
-                send_embed(TARGET_URLS[i], TARGET_NAMES[i], sku)
-            time.sleep(5)
+        asyncio.run(check_all_targets())  # Run all checks in parallel
+        time.sleep(5)  # Delay before the next round of checks
 
 if __name__ == "__main__":
     run_bot()
