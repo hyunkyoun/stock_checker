@@ -1,7 +1,7 @@
 requests 
 fake_useragent 
-beautifulsoup4
-selenium
 webdriver-manager
-discord.py
+discord-webhook
 python-dotenv
+playwright
+playwright-stealth
