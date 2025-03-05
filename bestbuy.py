@@ -16,7 +16,7 @@ async def check_stock(sku):
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(
-            headless=True, 
+            headless=False, 
             args=["--disable-blink-features=AutomationControlled"]  # Hides automation traces
         )
         context = await browser.new_context(
@@ -59,24 +59,24 @@ async def check_stock(sku):
 
                 if await page.locator(addtocart_button_selector).first.is_visible():
                     print("Add to Cart button found! Clicking it...")
-                    return True, page.url
+                    return True, page.url, "atc"
                 elif await page.locator(preorder_button_selector).first.is_visible():
                     print("Item is available for Pre-Order.")
-                    return True, page.url
+                    return True, page.url, "pre"
                 
                 elif await page.locator(oos_button_selector).first.is_visible():
                     print("Item is Sold Out.")
                 elif await page.locator(comingsoon_button_selector).first.is_visible():
                     print("Item is Coming Soon.")
 
-                return False, page.url
+                return False, page.url, ""
 
         except asyncio.TimeoutError:
             print("Timeout: Button not found. Product might be unavailable.")
-            return False, page.url
+            return False, page.url, ""
         except Exception as e:
             print(f"Error: {e}")
-            return False, page.url
+            return False, page.url, ""
         finally:
             await browser.close()
 
@@ -99,7 +99,7 @@ BESTBUY_NAMES = [
 ]
     
 
-def send_embed(url, name, sku):
+def send_embed(url, name, sku, cart_type):
     webhook_url = "https://discord.com/api/webhooks/1346642024903737344/J0NLtSe0gNiZy3VSSWpZgzjBRmRlQlTDBIZCpDPANDQA9euAOig1yr-NV21S_txmfrqy"
     webhook = DiscordWebhook(
         url=webhook_url,
@@ -108,6 +108,12 @@ def send_embed(url, name, sku):
 
     embed = DiscordEmbed(title="BestBuy Stock Notification", description=f"[{name}]({url})", color=0x00FF00)
     embed.add_embed_field(name="SKU", value=f"{sku}")
+
+    if cart_type == "atc":
+        embed.add_embed_field(name="Product Status", value="Available Now")
+    elif cart_type == "pre":
+        embed.add_embed_field(name="Product Status", value="Pre-Order")
+
     embed.set_footer(text=f"{datetime.now().strftime('%H:%M:%S')}")
 
     webhook.add_embed(embed)
@@ -126,9 +132,9 @@ async def check_all_targets():
     await asyncio.gather(*tasks)
 
 async def check_and_notify(sku, name):
-    in_stock, page_url = await check_stock(sku)
+    in_stock, page_url, cart_type = await check_stock(sku)
     if in_stock:
-        send_embed(page_url, name, sku)
+        send_embed(page_url, name, sku, cart_type)
 
 def run_bot():
     while True:
