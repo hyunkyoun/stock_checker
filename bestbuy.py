@@ -7,15 +7,28 @@ from discord_webhook import DiscordWebhook, DiscordEmbed
 from datetime import datetime
 import time
 import random
-
-
+import json
+import itertools
+    
 HOME_PAGE_URL = "https://www.bestbuy.com/"
+
+def get_next_proxy():
+    selected_proxy = next(proxy_cycle)
+    return {
+        "server": f"http://{selected_proxy['ip']}:{selected_proxy['port']}",
+        "username": selected_proxy["username"],
+        "password": selected_proxy["password"]
+    }
 
 async def check_stock(sku):
     print(f"Checking stock for SKU: {sku}")
 
+    proxy = get_next_proxy()
+    print(f"Using proxy: {proxy['server']}")
+
     async with async_playwright() as p:
         browser = await p.chromium.launch(
+            proxy=proxy,
             headless=False, 
             args=["--disable-blink-features=AutomationControlled"]  # Hides automation traces
         )
@@ -29,6 +42,15 @@ async def check_stock(sku):
 
         try:
             await page.goto(HOME_PAGE_URL, wait_until="domcontentloaded")
+
+            try:
+                usa_button = await page.wait_for_selector('img[alt="United States"]', timeout=3000)  # Wait 3s max
+                if usa_button:
+                    print("Country selection detected. Clicking 'United States'...")
+                    await usa_button.click()
+                    await page.wait_for_timeout(random.randint(2000, 4000))  # Wait for transition
+            except:
+                print("No country selection popup detected. Continuing...")
 
             search_input_selector = "input#gh-search-input.search-input.search-input-default"
 
@@ -97,7 +119,6 @@ BESTBUY_NAMES = [
     "Pokémon TCG - Blooming Waters Premium Collection",
     "Pokémon TCG - Charizard ex Super-Premium Collection",
 ]
-    
 
 def send_embed(url, name, sku, cart_type):
     webhook_url = "https://discord.com/api/webhooks/1346642024903737344/J0NLtSe0gNiZy3VSSWpZgzjBRmRlQlTDBIZCpDPANDQA9euAOig1yr-NV21S_txmfrqy"
@@ -136,10 +157,18 @@ async def check_and_notify(sku, name):
     if in_stock:
         send_embed(page_url, name, sku, cart_type)
 
+
+# main function
 def run_bot():
     while True:
         asyncio.run(check_all_targets())  # Run all checks in parallel
         time.sleep(random.randint(5, 10))  # Delay before the next round of checks
 
 if __name__ == "__main__":
+
+    with open("proxies.json", "r") as file:
+        proxies = json.load(file)["proxies"]
+
+    proxy_cycle=itertools.cycle(proxies)
+
     run_bot()

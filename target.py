@@ -75,7 +75,7 @@ TARGET_NAMES = [
 ]
 
 def send_embed(url, name, sku):
-    webhook_url = "https://discord.com/api/webhooks/1344064369822138419/La7IVFunEqn2iUG9tIcSK-zFQ-QxmlZq2TXUikMK25lYZZAKSOxTw6kVL2vseqzmhXcW"
+    webhook_url = "https://discord.com/api/webhooks/1346706235696873483/o9hYc4BC0PdwIfc3XAkaI0qcKGKslQ8g8umUBgjifXidWXzBf5IyjoNnihk3KmPKq4CR"
     webhook = DiscordWebhook(
         url=webhook_url,
         username="Target Monitor",
