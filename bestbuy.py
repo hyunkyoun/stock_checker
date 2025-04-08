@@ -120,49 +120,49 @@ BESTBUY_NAMES = [
     "Pokémon TCG - Charizard ex Super-Premium Collection",
 ]
 
-def send_embed(url, name, sku, cart_type):
-    webhook_url = "https://discord.com/api/webhooks/1346642024903737344/J0NLtSe0gNiZy3VSSWpZgzjBRmRlQlTDBIZCpDPANDQA9euAOig1yr-NV21S_txmfrqy"
-    webhook = DiscordWebhook(
-        url=webhook_url,
-        username="BestBuy Monitor",
-    )
+# def send_embed(url, name, sku, cart_type):
+#     webhook_url = ""
+#     webhook = DiscordWebhook(
+#         url=webhook_url,
+#         username="BestBuy Monitor",
+#     )
 
-    embed = DiscordEmbed(title="BestBuy Stock Notification", description=f"[{name}]({url})", color=0x00FF00)
-    embed.add_embed_field(name="SKU", value=f"{sku}")
+#     embed = DiscordEmbed(title="BestBuy Stock Notification", description=f"[{name}]({url})", color=0x00FF00)
+#     embed.add_embed_field(name="SKU", value=f"{sku}")
 
-    if cart_type == "atc":
-        embed.add_embed_field(name="Product Status", value="Available Now")
-    elif cart_type == "pre":
-        embed.add_embed_field(name="Product Status", value="Pre-Order")
+#     if cart_type == "atc":
+#         embed.add_embed_field(name="Product Status", value="Available Now")
+#     elif cart_type == "pre":
+#         embed.add_embed_field(name="Product Status", value="Pre-Order")
 
-    embed.set_footer(text=f"{datetime.now().strftime('%H:%M:%S')}")
+#     embed.set_footer(text=f"{datetime.now().strftime('%H:%M:%S')}")
 
-    webhook.add_embed(embed)
-    response = webhook.execute()
+#     webhook.add_embed(embed)
+#     response = webhook.execute()
 
-    if response.status_code == 200:
-        print("Message sent successfully!")
-    else:
-        print("Failed to send message. Status code: ", response.status_code)
+#     if response.status_code == 200:
+#         print("Message sent successfully!")
+#     else:
+#         print("Failed to send message. Status code: ", response.status_code)
 
-async def check_all_targets():
-    tasks = []
-    for i in range(len(BESTBUY_SKUS)):
-        tasks.append(check_and_notify(BESTBUY_SKUS[i], BESTBUY_NAMES[i]))
+# async def check_all_targets():
+#     tasks = []
+#     for i in range(len(BESTBUY_SKUS)):
+#         tasks.append(check_and_notify(BESTBUY_SKUS[i], BESTBUY_NAMES[i]))
     
-    await asyncio.gather(*tasks)
+#     await asyncio.gather(*tasks)
 
-async def check_and_notify(sku, name):
-    in_stock, page_url, cart_type = await check_stock(sku)
-    if in_stock:
-        send_embed(page_url, name, sku, cart_type)
+# async def check_and_notify(sku, name):
+#     in_stock, page_url, cart_type = await check_stock(sku)
+#     if in_stock:
+#         send_embed(page_url, name, sku, cart_type)
 
 
-# main function
-def run_bot():
-    while True:
-        asyncio.run(check_all_targets())  # Run all checks in parallel
-        time.sleep(random.randint(5, 10))  # Delay before the next round of checks
+# # main function
+# def run_bot():
+#     while True:
+#         asyncio.run(check_all_targets())  # Run all checks in parallel
+#         time.sleep(random.randint(5, 10))  # Delay before the next round of checks
 
 if __name__ == "__main__":
 

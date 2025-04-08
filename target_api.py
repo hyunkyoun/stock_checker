@@ -3,8 +3,8 @@ import json
 import requests
 from playwright.async_api import async_playwright
 
-EMAIL = "ekim2350@gmail.com"
-PASSWORD = "Moth050404"
+EMAIL = ""
+PASSWORD = ""
 TCIN = "92538483"
 QUANTITY = 1
 

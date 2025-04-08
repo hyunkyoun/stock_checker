@@ -3,9 +3,9 @@ import requests
 from playwright.async_api import async_playwright
 import random
 
-EMAIL = "ekim2350@gmail.com"
-PASSWORD = "Moth050404"
-CVV = "803"
+EMAIL = ""
+PASSWORD = ""
+CVV = ""
 TCIN = "89444928"
 QUANTITY = 1
 
