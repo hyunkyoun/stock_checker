@@ -128,7 +128,7 @@ async def main_loop():
     while True:
         await run_batches(target_product_pages, batch_size=3, delay_between_batches=2)
         print("\nWaiting 4-7 seconds before next full check...\n")
-        await asyncio.sleep(random.randint(4, 7))
+        await asyncio.sleep(random.randint(5, 10))
 
 if __name__ == "__main__":
     asyncio.run(main_loop())
