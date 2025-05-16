@@ -3,10 +3,10 @@ import json
 import requests
 from playwright.async_api import async_playwright
 
-EMAIL = ""
-PASSWORD = ""
-TCIN = "92538483"
-QUANTITY = 1
+EMAIL = "ekim2350@gmail.com"
+PASSWORD = "Moth050404"
+TCIN = "94336414"
+QUANTITY = 3
 
 async def get_target_cookies():
     async with async_playwright() as p:
@@ -36,9 +36,6 @@ async def get_target_cookies():
         await page.locator('#login:has-text("Sign in with password")').click()
 
         await page.wait_for_timeout(3000)  # Let cookies load
-
-        await page.goto("https://www.target.com/cart")
-
 
         cookies = await context.cookies()
         await browser.close()
@@ -78,13 +75,22 @@ def add_to_cart(session, headers):
     response = session.post(url, headers=headers, json=payload)
     data = response.json()
 
-    print("✅ Item added to cart.")
-    cart_id = data.get("cart_id")
-    return cart_id
+    if (data):
+        print(data)
+        print("✅ Item added to cart.")
+        cart_id = data.get("cart_id")
+        return cart_id
+    print(data)
+    print("❌ Failed to add item to cart.")
+
+    return 0
 
 # ---- MAIN ----
 cookies = asyncio.run(get_target_cookies())
+print(cookies, "\n")
 jar, access_token = convert_cookies_to_jar(cookies)
+print(jar, "\n")
+print(access_token)
 
 if not access_token:
     print("❌ accessToken not found in cookies. Try reloading the page longer in Playwright.")

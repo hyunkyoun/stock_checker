@@ -21,7 +21,31 @@ def extract_product_id(url):
         return match.group(1)
     return None
 
+def check_for_queue():
+    import requests 
 
+    url = 'https://www.pokemoncenter.com/_Incapsula_Resource?SWWRGTS=868'
+    ua = UserAgent()
+
+    useragent = ua.random
+
+    headers = {
+        'User-Agent': useragent
+    }
+
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        data = response.json()
+        if data.get('pending') == 1:
+            print("⚠️ Queue is active!")
+            print(f"Time to wait (ttw): {data.get('ttw')} seconds")
+            print(f"Reload (rld): {data.get('rld')}")
+            print(f"Your position (pos): {data.get('pos')}")
+        else:
+            print("✅ No queue detected.")
+    else:
+        print(f"Failed to get response. Status code: {response.status_code}")
 
 def send_embed(url, name, sku, cart_type):
     webhook_url = os.getenv("PC_WEBHOOK")
